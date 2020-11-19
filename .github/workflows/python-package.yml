@@ -39,3 +39,6 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Build the Docker image
+        working-directory: simulation_monte_carlo_pi
+        run: docker build . --file Dockerfile --tag monte-carlo-pi:latest
