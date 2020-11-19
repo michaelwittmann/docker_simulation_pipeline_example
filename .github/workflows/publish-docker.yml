@@ -17,7 +17,7 @@ jobs:
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          file: simulation_monte_carlo_pi/Dockerfile
+          dockerfile: simulation_monte_carlo_pi/Dockerfile
           registry: docker.pkg.github.com
           repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
           tags: latest
