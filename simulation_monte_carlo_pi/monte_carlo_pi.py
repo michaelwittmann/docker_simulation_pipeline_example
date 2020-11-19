@@ -48,6 +48,7 @@ class MonteCarloPi():
 
 
 if __name__ == '__main__':
+    print('Starting Simulation')
     simulation = MonteCarloPi(iterations=100000, random_seed=12345)
     simulation.estimate_pi()
     simulation.plot()
