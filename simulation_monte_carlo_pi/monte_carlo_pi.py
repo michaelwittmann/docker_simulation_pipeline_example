@@ -40,7 +40,7 @@ class MonteCarloPi():
                    label=f'Points outside: $n={len(self.points_outside)}$')
         ax.scatter(*zip(*self.points_inside[:10000]), color='b', alpha=0.5, label=f'Points inside: $n={len(self.points_inside)}$')
         ax.plot(x_circle, self._f_circle(x_circle), color='black', linestyle='--', linewidth=2, label='circle')
-        ax.set_title(f'Estimate of $\pi={self.pi_estimate:.10f}$\nIterations $n={self.iterations}$')
+        ax.set_title(r'Estimate of $\pi={self.pi_estimate:.10f}$\nIterations $n={self.iterations}$')
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
         ax.legend(loc='lower right')
