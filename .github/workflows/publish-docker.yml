@@ -20,5 +20,5 @@ jobs:
           file: simulation_monte_carlo_pi/Dockerfile
           registry: docker.pkg.github.com
           repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
-          tags: monte-carlo-pi-image:latest
+          tags: latest
           tag_with_ref: true
