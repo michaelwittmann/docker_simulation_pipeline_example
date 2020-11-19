@@ -13,11 +13,11 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to GitHub Packages
-        working-directory: simulation_monte_carlo_pi
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          file: simulation_monte_carlo_pi/Dockerfile
           registry: docker.pkg.github.com
           repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
+          push: true
+          tags: monte-carlo-pi-image:latest
           tag_with_ref: true
