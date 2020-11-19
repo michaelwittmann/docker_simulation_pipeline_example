@@ -52,7 +52,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
           dockerfile: simulation_monte_carlo_pi/Dockerfile
-          registry: ghcr.io
-          repository: michaelwittmann/monte-carlo-pi-image
+          registry: docker.pkg.github.com
+          repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
           tags: latest
           tag_with_ref: true
