@@ -51,10 +51,10 @@ class DockerManager():
     def _run_simulation(self, sim_run: int):
         simulation_path = self._init_scenario(sim_run=sim_run)
         if simulation_path is None:
-            logger.error(f'Error during initialization of simulation {sim_run}')
+            logger.error(f'Error during initialization of simulation_monte_carlo_pi {sim_run}')
             return
         else:
-            logger.debug(f'Starting container for simulation run {sim_run}')
+            logger.debug(f'Starting container for simulation_monte_carlo_pi run {sim_run}')
             container_name = f'{self._container_prefix}_{sim_run}'
             command = 'INSERT YOUR COMMAND HERE'
             self._run_docker_container(container_name=container_name, working_dir=simulation_path, command=command)
@@ -67,11 +67,11 @@ class DockerManager():
                     image=self._docker_image,
                     command=command,
                     mounts=[Mount(
-                        target='/simulation',
+                        target='/simulation_monte_carlo_pi',
                         source=str(working_dir.resolve()),
                         type='bind'
                     )],
-                    working_dir='/simulation',
+                    working_dir='../simulation_monte_carlo_pi',
                     name=container_name,
                     environment={
                         # If you need add your environment variables here
@@ -87,11 +87,11 @@ class DockerManager():
                     image=self._docker_image,
                     command=command,
                     mounts=[Mount(
-                        target='/simulation',
+                        target='/simulation_monte_carlo_pi',
                         source=str(working_dir.resolve()),
                         type='bind'
                     )],
-                    working_dir='/simulation',
+                    working_dir='../simulation_monte_carlo_pi',
                     name=container_name,
                     environment={
                         # If you need add your environment variables here
@@ -167,7 +167,7 @@ class DockerManager():
         try:
             with self._io_lock:
                 working_dir.mkdir(exist_ok=False, parents=True)
-                # if you need additional files in your simulation e.g. config files, data, add them here simulation here
+                # if you need additional files in your simulation_monte_carlo_pi e.g. config files, data, add them here simulation_monte_carlo_pi here
             return working_dir
         except Exception as e:
             logger.warning(e)

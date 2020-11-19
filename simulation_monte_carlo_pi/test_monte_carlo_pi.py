@@ -1,6 +1,6 @@
 from unittest import TestCase
 import math
-from monte_carlo_pi import MonteCarloPi
+from simulation_monte_carlo_pi.monte_carlo_pi import MonteCarloPi
 class TestMonteCarloPi(TestCase):
 
 
