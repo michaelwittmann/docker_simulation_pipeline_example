@@ -15,4 +15,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build simulation_monte_carlo_pi/. --file Dockerfile --tag monte-carlo-pi:$(date +%s)
+      working-directory: simulation_monte_carlo_pi
+      run: docker build . --file Dockerfile --tag monte-carlo-pi:$(date +%s)
