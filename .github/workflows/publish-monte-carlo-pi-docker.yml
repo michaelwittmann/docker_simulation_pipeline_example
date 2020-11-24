@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master ]
       paths:
-        - 'generative_art/**'
+        - 'simulation_monte_carlo_pi/**'
 jobs:
   test:
     runs-on: ubuntu-latest

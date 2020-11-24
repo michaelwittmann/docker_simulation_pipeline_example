@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master ]
         paths:
-          - 'simulation_monte_carlo_pi/**'
+          - 'generative_art/**'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -45,12 +45,12 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to GitHub Packages
-        uses: docker_sim/build-push-action@v1
+        uses: docker/build-push-action@v1
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.CR_PAT }}
           dockerfile: generative_art/Dockerfile
-          registry: docker_sim.pkg.github.com
-          repository: michaelwittmann/docker_simulation_pipeline_example/generative-art-image
+          registry: docker.pkg.github.com
+          repository: michaelwittmann/docker_simulation_pipeline_example/random-art-image
           tags: latest
           tag_with_ref: true
