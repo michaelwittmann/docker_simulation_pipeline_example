@@ -6,7 +6,7 @@ name: Monte Carlo Pi Test and Docker Publish
 on:
   push:
     paths:
-      - 'generative_art/**'
+      - 'simulation_monte_carlo/**'
 jobs:
   test:
     runs-on: ubuntu-latest
