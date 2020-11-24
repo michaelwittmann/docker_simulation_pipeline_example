@@ -5,9 +5,8 @@ name: Monte Carlo Pi Test and Docker Publish
 
 on:
   push:
-    branches: [ master ]
-      paths:
-        - 'generative_art/**'
+    paths:
+      - 'generative_art/**'
 jobs:
   test:
     runs-on: ubuntu-latest
