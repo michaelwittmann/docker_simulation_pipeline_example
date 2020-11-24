@@ -6,7 +6,7 @@ name: Generative Art Docker Publish
 on:
   push:
     paths:
-      - 'simulation_monte_carlo_pi/**'
+      - 'generative_art/**'
 jobs:
   test:
     runs-on: ubuntu-latest
