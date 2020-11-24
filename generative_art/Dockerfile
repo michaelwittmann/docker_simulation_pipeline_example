@@ -13,4 +13,4 @@ RUN pip install poetry
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
-ENTRYPOINT ["python", "./monte_carlo_pi.py"]
+ENTRYPOINT ["python", "./sprithering.py"]

@@ -85,10 +85,15 @@ def main(argv):
             random_seed = int(arg)
 
 
-    print('Starting Simulation')
+    print(f'Starting Simulation: Iteations={iterations}, Random Seed={random_seed}')
+    tic = time.time()
     simulation = MonteCarloPi(iterations=iterations, random_seed=random_seed, output_dir = output_folder)
-    simulation.estimate_pi()
+    pi_hat = simulation.estimate_pi()
+    print(f'Simulation finished: pi_hat = {pi_hat:.10f}')
+    toc = time.time()
+    print('Generation plot')
     simulation.plot()
+    print(f'Simulation finished! ({toc-tic:.5} ms) ')
 
 
 if __name__ == '__main__':
