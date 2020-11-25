@@ -1,7 +1,6 @@
 # Example | Monte Carlo Estimation of PI
 
-If you draw random points on a square, $pi$ can be estimated by the ratio of points having a distance from the origin of less than 1  
-and the total-sample-count, multiplied by 4.
+If you draw random points on a square, PI can be estimated by the ratio of points having a distance from the origin of less than 1 and the total-sample-count, multiplied by 4.
 
 This example project randomly samples points, estimats pi an generates a plot of your experiment.
 
