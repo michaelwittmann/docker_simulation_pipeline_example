@@ -28,9 +28,9 @@ This script provides a command line interface to specify the parameters of your 
 python sprithering.py -o <output_folder> -g <grid_size> -i <invaders> -s <img_size> -n <samples>  
 ```
 
-![Radom Art](img/5x5-10-5000.png)
-![Radom Art](img/15x15-5-5000.png)
-![Radom Art](img/15x15-30-5000.png)
+![Radom Art](img/5x5-10-5000.jpg)
+![Radom Art](img/15x15-5-5000.jpg)
+![Radom Art](img/15x15-30-5000.jpg)
 
 ## Docker Container
 The example is packed into a simple python docker container. The container is available in this repositories container registry.
