@@ -190,7 +190,9 @@ You can watch the results of your pipeline under `https://github.com/YOUR_NAMESP
 <img src="img/workflow_details.png" width="600">
 
 The containers should now also be visible on your repositories main page:
+
 <img src="img/packages.png">
+
 <img src="img/packages_details.png">
 
 
