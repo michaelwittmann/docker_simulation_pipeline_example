@@ -36,7 +36,7 @@ Our pipeline consists of three main parts:
 2. A GitHubActions pipeline, which test, builds and deploys your containerized simulation.
 3. A Python script that orchestrates your simulation tasks in docker (`docker_sim_manager.py`)
 
-<img src="img/concept.png" width="600" >
+<img src="img/concept.png" width="800" >
 
 ## Simulations
 It doesn't matter what kind of simulation you are running. If it runs on your PC, you will be able to pack it into a docker image.
@@ -183,9 +183,15 @@ For more infos have a look at (https://github.com/docker/build-push-action)
           tag_with_ref: true
 ```
 
-You can watch the results of your pipeline under `https://github.com/YOUR_NAMESPACE/YOUR_REPO/actions`.
+You can watch the results of your pipeline under `https://github.com/YOUR_NAMESPACE/YOUR_REPO/actions`:
 
-<ADD IMAGES>
+<img src="img/actions_menu_bar.jpg" width="600">
+<img src="img/workflows-overview.jpg" width="600">
+<img src="img/workflow_details.jpg" width="600">
+
+The containers should now also be visible on your repositories main page:
+<img src="img/packages.jpg" width="600">
+<img src="img/packages_details.jpg" width="600">
 
 
 ### Pull your docker image
