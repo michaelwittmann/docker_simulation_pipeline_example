@@ -35,21 +35,29 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
-      
+        PYTHONPATH=example_monte_carlo_pi && pytest
+
   build_docker_and_push_to_registry:
     needs: test
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          username: ${{ github.actor }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-          dockerfile: example_monte_carlo_pi/Dockerfile
-          registry: docker.pkg.github.com
-          repository: maxispeicher/docker_simulation_pipeline_example/monte-carlo-pi-image
-          tags: latest
-          tag_with_ref: true
+      - name: Build and push docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./example_monte_carlo_pi/
+          file: example_monte_carlo_pi/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
