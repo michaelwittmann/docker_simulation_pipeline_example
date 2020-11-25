@@ -33,10 +33,10 @@ https://docs.docker.com/get-docker/
 
 ### Pull Docker container
 ```shell script
-docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+docker pull ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ```
 
 ### Run Docker container
 ```shell script
-docker run --name MonteCarloPi -it --mount type=bind,src=DIR_ON_YOUR_HOST,dst=/mnt/output/ docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest -o /mnt/output -i 100
+docker run --name MonteCarloPi -it --mount type=bind,src=DIR_ON_YOUR_HOST,dst=/mnt/output/ ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest -o /mnt/output -i 100
 ```

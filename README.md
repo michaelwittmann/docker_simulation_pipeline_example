@@ -165,22 +165,30 @@ This job checks out the current version of the repository, and runs docker build
 
 For more infos have a look at (https://github.com/docker/build-push-action)
 ```yaml
- build_docker_and_push_to_registry:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
-          dockerfile: example_monte_carlo_pi/Dockerfile
-          registry: docker.pkg.github.com
-          repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
-          tags: latest
-          tag_with_ref: true
+build_docker_and_push_to_registry:
+  needs: test
+  runs-on: ubuntu-20.04
+  steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+    - name: Build and push docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: ./example_monte_carlo_pi/
+        file: example_monte_carlo_pi/Dockerfile
+        platforms: linux/amd64,linux/arm64,linux/386
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ```
 
 You can watch the results of your pipeline under `https://github.com/YOUR_NAMESPACE/YOUR_REPO/actions`:
@@ -189,7 +197,7 @@ You can watch the results of your pipeline under `https://github.com/YOUR_NAMESP
 <img src="img/workflows-overview.png" width="600">
 <img src="img/workflow_details.png" width="600">
 
-The images should now also be visible on your repositories main page:
+The images should now also be visible on your GitHub account (`https://github.com/<username>?tab=packages`):
 
 <img src="img/packages.png">
 
@@ -201,22 +209,22 @@ Let's verify that everything works properly, and let's pull the image to our loc
 
 1. At the first time you must provide your login credentials for your container image registry
 ```shell script
-docker login docker.pkg.github.com
+docker login ghcr.io
 ```
 2. Pull the image
 ```shell script
-docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+docker pull ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ...
 >e44af8ed0266: Pull complete
 >Digest: sha256:77b65a3bb8deb5b4aa436d28a5dc7fc561b4882f2f115c3843b4afe1a7df23d4
->Status: Downloaded newer image for docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
->docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>Status: Downloaded newer image for ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 
 ```
 
 3. Run the container
 ```shell script
-docker run -it docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+docker run -it ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ...
 >Starting simulation: iterations=100000, random_seed=1
 >Result: pi_hat = 3.1378400000
@@ -268,7 +276,7 @@ output_folder = Path.home().joinpath('example_docker_simulation')
 2. Create a DockerSimManager object.
 ```python
  # Generate DockerSimManager object. Specify simulation image, number of parallel containers and output_path
-docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
+docker_manager = DockerSimManager('ghcr.io/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
                                   10,
                                   output_folder)
 ```
