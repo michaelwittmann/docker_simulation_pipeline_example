@@ -3,10 +3,7 @@
 
 name: Generative Art Docker Publish
 
-on:
-  push:
-    paths:
-      - 'example_random_art/**'
+on: [push]
 jobs:
   test:
     runs-on: ubuntu-20.04

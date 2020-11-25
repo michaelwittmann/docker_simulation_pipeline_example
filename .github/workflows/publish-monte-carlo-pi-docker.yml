@@ -3,10 +3,7 @@
 
 name: Monte Carlo Pi Test and Docker Publish
 
-on:
-  push:
-    paths:
-      - 'simulation_monte_carlo/**'
+on: [push]
 
 jobs:
   test:
