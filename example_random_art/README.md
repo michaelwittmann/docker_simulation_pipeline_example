@@ -28,6 +28,8 @@ This script provides a command line interface to specify the parameters of your 
 python sprithering.py -o <output_folder> -g <grid_size> -i <invaders> -s <img_size> -n <samples>  
 ```
 
+<img src="img/5x5-10-5000.jpg" width="100" height="100">
+
 ![Radom Art](img/5x5-10-5000.jpg =250x)
 ![Radom Art](img/15x15-5-5000.jpg =250x)
 ![Radom Art](img/15x15-30-5000.jpg =250x)
