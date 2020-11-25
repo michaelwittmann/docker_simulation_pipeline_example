@@ -24,7 +24,6 @@ __maintainer__ = "Michael Wittmann"
 __email__ = "michael.wittmann@tum.de"
 __status__ = "Example"
 
-# Trigger Build
 
 class MonteCarloPi():
 
