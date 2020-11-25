@@ -77,7 +77,7 @@ class MonteCarloPi():
 
     def plot(self, path=None):
         """
-        Plot results of monte-carlo estimation
+        Plot img of monte-carlo estimation
         :param path: output directory, uses cwd if None
         """
         x_circle = np.linspace(0, 1, 200)
@@ -97,7 +97,7 @@ class MonteCarloPi():
 
 
 def main(argv):
-    output_folder:Path = Path('results')
+    output_folder:Path = Path('img')
     iterations: int = 100000
     random_seed:int = 1
 
