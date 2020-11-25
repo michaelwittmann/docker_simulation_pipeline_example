@@ -185,13 +185,13 @@ For more infos have a look at (https://github.com/docker/build-push-action)
 
 You can watch the results of your pipeline under `https://github.com/YOUR_NAMESPACE/YOUR_REPO/actions`:
 
-<img src="img/actions_menu_bar.jpg" width="600">
-<img src="img/workflows-overview.jpg" width="600">
-<img src="img/workflow_details.jpg" width="600">
+<img src="img/actions_menu_bar.png" width="600">
+<img src="img/workflows-overview.png" width="600">
+<img src="img/workflow_details.png" width="600">
 
 The containers should now also be visible on your repositories main page:
-<img src="img/packages.jpg" width="600">
-<img src="img/packages_details.jpg" width="600">
+<img src="img/packages.png" width="600">
+<img src="img/packages_details.png" width="600">
 
 
 ### Pull your docker image
