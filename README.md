@@ -309,3 +309,5 @@ ls ~/example_docker_simulation
 ```
 
 
+## Acknoloedgements
+Thanks to [Maximilian Speicher](https://github.com/maxispeicher)  for the inspiration on this tutorial, and the first implementation of `DockerSimManager`
