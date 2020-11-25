@@ -13,14 +13,20 @@ Fore more infromations please read, like and share the article of Eric Davidson 
 
 ### Install
 1. This project uses poetry for dependency management. First install poetry via pip
-`pip install poetry`
+```shell script
+pip install poetry
+```
 
 2. Run poetry install in this directory
-`poetry install`
+```shell script
+poetry install
+```
 
 ### Run Script
 This script provides a command line interface to specify the parameters of your experiment .
-`'sprithering.py -o <output_folder> -g <grid_size> -i <invaders> -s <img_size> -n <samples>'`
+```shell script
+python sprithering.py -o <output_folder> -g <grid_size> -i <invaders> -s <img_size> -n <samples>  
+```
 
 <ADD IMAGES HERE>
 
@@ -31,10 +37,11 @@ The example is packed into a simple python docker container. The container is av
 https://docs.docker.com/get-docker/
 
 ### Pull Docker container
-`docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest`
+```shell script
+docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest
+```
 
 ### Run Docker container
-```bash
-docker run --name RandomArt -it --mount type=bind,src=C:\Users\gu92jih\docker_sim,dst=/mnt/output/ docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest -o /mnt/output -g 15 -i 30 -
-s 5000 -n 2
+```shell script
+docker run --name RandomArt -it --mount type=bind,src=C:\Users\gu92jih\docker_sim,dst=/mnt/output/ docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest -o /mnt/output -g 15 -i 30 -s 5000 -n 2
 ```

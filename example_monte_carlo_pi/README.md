@@ -9,15 +9,20 @@ This example project randomly samples points, estimats pi an generates a plot of
 
 ### Install
 1. This project uses poetry for dependency managment. First install poetry via pip
-`pip install poetry`
+```shell script
+pip install poetry
+```
 
 2. Run poetry install in this directory
-`poetry install`
+```shell script
+poetry install
+```
 
 ### Run Script
 This script provides a command line interface to specify the parameters of your experiment .
-`python monte_carlo_pi.py - o <output_folder> -i <iterations> -r <random_seed>`
-
+```shell script
+python monte_carlo_pi.py - o <output_folder> -i <iterations> -r <random_seed>`
+```
 <ADD IMAGE HERE>
 
 ## Docker Container
@@ -27,9 +32,11 @@ The example is packed into a simple python docker container. The container is av
 https://docs.docker.com/get-docker/
 
 ### Pull Docker container
-`docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest`
+```shell script
+docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+```
 
 ### Run Docker container
-```bash
-docker run --name MonteCarloPi -it --mount type=bind,src=DIR_ON_YOUR_HOST,dst=/mnt/output/  docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest -o /mnt/output -i 100
+```shell script
+docker run --name MonteCarloPi -it --mount type=bind,src=DIR_ON_YOUR_HOST,dst=/mnt/output/ docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest -o /mnt/output -i 100
 ```
