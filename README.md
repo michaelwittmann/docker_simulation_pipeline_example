@@ -7,8 +7,8 @@ This is an example project to demonstrate how one can easily scale simulation ru
 Docker is a great tool, which lets you orchestrate your software stack with scalable containers.
 It is mainly used to deploy applications on a distributed cloud infrastructure.
 An application once packed into da docker container is portable to every host running docker.
-(There are some issues when you move across architecture boarders like x86 to ARM, but most of you will still work on x86 architectures)
-For more information pleas look out for some great tutorials about docker at docker.com or other sources like medium.com, youtube.com ...
+There are some issues when you move across architecture (e.g. x86 to ARM), but most of you will still work on x86 architectures
+For more information on docker please look out for some great tutorials at [docker.com], [medium.com] or [youtube.com] ...
 
 ### Docker for simulation tasks
 In simulation you often want to run the same simulation with different parameter sets/configurations.
