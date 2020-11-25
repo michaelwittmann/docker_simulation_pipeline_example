@@ -35,7 +35,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        PYTHONPATH=example_monte_carlo_pi && pytest
+        PYTHONPATH=. && pytest
 
   build_docker_and_push_to_registry:
     needs: test
@@ -58,6 +58,6 @@ jobs:
         with:
           context: ./example_monte_carlo_pi/
           file: example_monte_carlo_pi/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64,linux/386
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
