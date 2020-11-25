@@ -16,7 +16,7 @@ At a point in time, when the number of iterations and/or computation time grows,
 Maybe you have access to a cloud computing infrastructure, maybe you have a big computing machine at your lab,
 maybe you want to run your simulation on different hosts. Anyways, docker offers a great framework to scale up and orchestrate your simulation runs.
 
-In this tutorial, I'm gonna show you how to set up und run a simulation pipeline using docker to p parallelize your simulation runs.
+In this tutorial, I'm gonna show you how to set up und run a simulation pipeline using docker to parallelize your simulation tasks.
 
 Note: In this tutorial I use 2 very simple examples to give you an idea of the main concept. Running those scripts in a docker container
 may look a bit over engineered for those tasks and it is! Before you adapt this approach, ask your self: "How long is my main computation time  
