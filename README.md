@@ -11,7 +11,7 @@ There are some issues when you move across architecture (e.g. x86 to ARM), but m
 For more information on docker please look out for some great tutorials at [docker.com](www.docker.com), [medium.com](www.medium.com) or [youtube.com](www.youtube.com) ...
 
 ### Docker for simulation tasks
-In simulation you often want to run the same simulation with different parameter sets/configurations.
+In simulation you often want to run the same simulation with different parameter sets or configurations.
 When the number of iteration and computation time grows, you might ask your self how to scale up your simulation tasks.
 Maybe you have access to a cloud computing infrastructure, maybe you have a big computing machine at your lab,
 maybe you want to run your simulation on different hosts. Anyways, docker offers a great framework to scale up and orchestrate your simulation runs.
