@@ -22,7 +22,9 @@ This script provides a command line interface to specify the parameters of your 
 ```shell script
 python monte_carlo_pi.py - o <output_folder> -i <iterations> -r <random_seed>`
 ```
-![alt text](img/pi_estmimate_n500.png)
+
+<img src="(img/pi_estmimate_n500.png" width="500" height="500">
+
 ## Docker Container
 The example is packed into a simple python docker container. The container is available in this repositories container registry.
 
