@@ -8,7 +8,7 @@ Docker is a great tool, which lets you orchestrate your software stack with scal
 It is mainly used to deploy applications on a distributed cloud infrastructure.
 An application once packed into da docker container is portable to every host running docker.
 There are some issues when you move across architecture (e.g. x86 to ARM), but most of you will still work on x86 architectures
-For more information on docker please look out for some great tutorials at [docker.com], [medium.com] or [youtube.com] ...
+For more information on docker please look out for some great tutorials at [docker.com](www.docker.com), [medium.com](www.medium.com) or [youtube.com](www.youtube.com) ...
 
 ### Docker for simulation tasks
 In simulation you often want to run the same simulation with different parameter sets/configurations.
