@@ -39,11 +39,11 @@ Our pipeline consists of three main parts:
 <ADD IMAGE>
 
 ## Simulations
-It doesn't matter what kind of simulation you are running, when it runs on your PC, you will be able to pack it into a docker image.
-For sure it might get more complex, than in the example projects, but you only have to deal with it once. Just make sure that your simulation
+It doesn't matter what kind of simulation you are running. If it runs on your PC, you will be able to pack it into a docker image.
+For sure it might get more complex than in the example projects, but you only have to deal with it once. Just make sure that your simulation
 offers the possibility to parametrize it either via config-files or a cli.
 
-For this tutorial I prepared two simple example simulations in Python: `example_monte_carlo_pi`, `example_random_art`.
+For this tutorial I prepared two simple example simulations in Python: `example_monte_carlo_pi`, `example_random_art`
 
 ## Deploy your simulation in a docker container
 
@@ -53,7 +53,7 @@ which software gets installed, which environment variables are set and which pro
 
 Let's have a look at `example_random_art/Dockerfile`:
 
-- It uses an existing Image based on debian buster, along with python 3.9 preinstalled.
+- It uses an existing image based on debian buster, along with python 3.9 preinstalled.
 ```docker
 FROM python:3.9-buster
 ```
@@ -66,7 +66,7 @@ ENV TZ=Europe/Berlin
 ```docker
 WORKDIR /usr/src/app`
 ```
-- During build all files from the directory the Dockerfile lies in, get copied to the working directory
+- During build all files from the directory the Dockerfile lies in, get copied to the containers working directory (in this case `usr/src/app`
 ```docker
 COPY ./* ./
 ```
@@ -86,22 +86,25 @@ ENTRYPOINT ["python", "./sprithering.py"]
 
 Out of this blueprint you are able to build a docker container locally on your machine running:
 
-`docker build -t myimage:1.0`
+```shell script
+docker build -t myimage:1.0
+```
 
-That's okay if you work on the same machine where run your simulations, but gets annoying when you switch between different machines.  
-Moreover, you would ned to run `docker build` everytime you made changes on your source code. (Remember the simulation is packed into the container during its build.  
-If you want apply changes you have to build a new version of your container)
+That's okay if you work on the same machine, where run your simulations, but gets annoying when you switch between different machines.  
+Moreover, you would need to run `docker build` everytime you made changes on your source code. (Remember the simulation is packed into the container during its build. If you want apply changes you have to build a new version of your container)
 
 ### Test, Build and Deploy your Simulation with GitHub Actions
 Modern CI/CD pipelines let you automate those tasks and fill in seemingly into your workflow. (Like the `DockerFile` you just have to set it up once)
 In this tutorial I will show you how to run such a pipeline with GitHub Actions (https://github.com/features/actions).  
-The concept works also on other Platforms e.g. GitLab (https://docs.gitlab.com/ee/ci/), you will need to adapt the ci/cd pipeline on your requirements.
-If you haven't heard about CI/CD at all so far, I would recommend you to look for some tutorials out there. Especially  a proper CI/CD pipeline  
+The concept works also on other Platforms e.g. GitLab (https://docs.gitlab.com/ee/ci/). You will need to adapt the CI/CD pipeline on your requirements.
+
+If you haven't heard about CI/CD at all so far, I would recommend you to look for some tutorials out there. Especially  a proper CI/CD pipeline
 with unit-test can help you a lot find bugs in your code.
 
 #### GitHubActions
-GitHub Action jobs are collected in the directory `.github/` GitHub will auto-check for those files on push/merge events.
-Let' have a look at `.github/publish-monte-carlo-pi-docker`
+GitHub Action jobs are collected in the directory `.github/` of your repository. GitHub will auto-check for those files on repository events.
+
+Let' have a look at `.github/publish-monte-carlo-pi-docker`:
 
 
 #### Configure action events
@@ -115,7 +118,7 @@ on:
 ```
 
 #### Specify jobs
-The job contains 2 major jobs:
+The action script contains two jobs:
 1. `test` Run unit tests and code-format checkers (This ensures, that you hopefully deploy a working version of your simulation)
 ```yaml
 jobs:
@@ -153,13 +156,12 @@ jobs:
 
 2. `build_docker_and_push_to_registry` A Docker build and deploy task. This job runs only if the first one succeeds.
 This job, checks out the current version of the repository, and runs docker build and push with the given parameters.
-
-- `username`: Docker Registry Username. In this case: GitHub environment variable for the user triggering the action script
-- `password`: Docker Registry Password. In this case: Your Personal Access Token (PAT) with sufficient rights on your repository <ADD LINKS>
-- `dockerfile`: Path to your dockerfile inside the repository
-- `registry`: URL of your desired docker registry. In this case: GitHub Container Registry
-- `repository`: In this case: <YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY>/<DOCKER_IMAGE_NAME>
-- `tags`: Container tag. In this case: `latest`
+   - `username`: Docker Registry Username. In this case: GitHub environment variable for the user triggering the action script
+   - `password`: Docker Registry Password. In this case: Your Personal Access Token (PAT) with sufficient rights on your repository <ADD LINKS>
+   - `dockerfile`: Path to your dockerfile inside the repository
+   - `registry`: URL of your desired docker registry. In this case: GitHub Container Registry
+   - `repository`: In this case: <YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY>/<DOCKER_IMAGE_NAME>
+   - `tags`: Container tag. In this case: `latest`
 
 For more infos have a look at (https://github.com/docker/build-push-action)
 ```yaml
@@ -190,38 +192,38 @@ You can watch the results of your pipeline under `https://github.com/YOUR_NAMESP
 Let's verify that everything works properly, and let's pull the container to our local machine.
 
 1. At the first time you must provide your login credentials for your container registry
-`docker login docker.pkg.github.com`
-2. Pull the image
-`docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest`
-
+```shell script
+docker login docker.pkg.github.com
 ```
+2. Pull the image
+```shell script
+docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ...
-e44af8ed0266: Pull complete
-Digest: sha256:77b65a3bb8deb5b4aa436d28a5dc7fc561b4882f2f115c3843b4afe1a7df23d4
-Status: Downloaded newer image for docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
-docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>e44af8ed0266: Pull complete
+>Digest: sha256:77b65a3bb8deb5b4aa436d28a5dc7fc561b4882f2f115c3843b4afe1a7df23d4
+>Status: Downloaded newer image for docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 
 ```
 
 3. Run the container
-```
+```shell script
 docker run -it ocker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
-```
-```
-Starting simulation: iterations=100000, random_seed=1
-Result: pi_hat = 3.1378400000
-Generation plot...
-Simulation finished! (0.12351 ms)
+...
+>Starting simulation: iterations=100000, random_seed=1
+>Result: pi_hat = 3.1378400000
+>Generation plot...
+>Simulation finished! (0.12351 ms)
 
 ```
 
-Alright your simulation/app gets now automatically deployed in a docker container and is ready to be used for parallel simulations!
+Alright your simulation gets now automatically deployed in a docker container and is ready to be used for parallel simulations!
 
 
 
 ## Orchestrate your simulations
-Okay, that was a lot of work to setup the pipeline. Now its time to harvest the fruit of our efforts  ;-).
-We are now able to pull the latest version of your tested simulation, and ready to run as many parallel versions of it as you want.
+That was a lot of work to setup the pipeline. Now its time to harvest the fruit of our efforts ;-).
+We are now able to pull the latest version of our tested simulation, and are ready to run as many parallel versions of it as we want.
 
 Therefore I wrote a small Python script which helps you to orchestrate your simulation jobs (`docker_sim_manager.py`) and two examples based on the previous container examples (`example_monte_carlo.py`, `example_random_art.py`)
 
@@ -230,7 +232,7 @@ I wont go through the code line for line, but I'll give you a compact overview o
 - `DockerSimManager`: Main class, handling your docker containers.
   - `docker_container_url`: Simulation container URL at container registry
   - `max_workers`: number of parallel workers
-  - `data_directory`: path to the output directory on your host (This path gets mounted in your containers under /mnt/data/)
+  - `data_directory`: path to the output directory on your host (This path gets mounted in your containers under `/mnt/data/`)
   - `docker_repo_tag`: container tag, Default: latest
 
 - `SimJob`: A object, which represents a distinct simulation job. You can pass paths to template files, give it a Name and specify the initial command appended on the containers entrypoint.
@@ -258,9 +260,9 @@ output_folder = Path.home().joinpath('example_docker_simulation')
 2. Create a DockerSimManager object.
 ```python
  # Generate DockerSimManager object. Specify simulation container, number of parallel containers and output_path
-    docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
-                                      10,
-                                      output_folder)
+docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
+                                  10,
+                                  output_folder)
 ```
 
 3. Add simulation jobs to the queue
