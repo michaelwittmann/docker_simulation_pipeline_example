@@ -1,17 +1,39 @@
+#!/usr/bin/env python
+"""Monte carlo estimation of pi
+
+Background:
+https://en.wikipedia.org/wiki/Monte_Carlo_method
+
+"""
+
 import random
 import math
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 import sys
 import getopt
 
+__author__ = "Michael Wittmann and Maximilian Speicher"
+__copyright__ = "Copyright 2020, Michael Wittmann and Maximilian Speicher"
+
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Michael Wittmann"
+__email__ = "michael.wittmann@tum.de"
+__status__ = "Example"
+
 
 class MonteCarloPi():
 
     def __init__(self, iterations: int = 10000, random_seed: int = None, output_dir:Path = 'output') -> None:
+        """
+        New instance of MonteCarloPI
+        :param iterations: number of samples
+        :param random_seed: random seed to be used for sampling
+        :param output_dir: output directory for generated plots
+        """
         self.random_seed = random_seed
         self.iterations = iterations
         self.points_inside = []
@@ -24,10 +46,21 @@ class MonteCarloPi():
 
 
     def _f_circle(self, x, radius=1.0):
+        """
+        Circle funcion $y=sqrt(r^2-x^2)
+        :param x: x-value
+        :param radius: circle radius
+        :return: y-value
+        """
         y = np.sqrt(radius ** 2 - x ** 2)
         return y
 
     def estimate_pi(self) -> float:
+        """
+        Estimate pi, with monte carlo method.
+        https://en.wikipedia.org/wiki/Monte_Carlo_method
+        :return: Estimate of pi
+        """
         self.points_inside = []
         self.points_outside = []
         random.seed(self.random_seed)
@@ -43,6 +76,10 @@ class MonteCarloPi():
         return self.pi_estimate
 
     def plot(self, path=None):
+        """
+        Plot results of monte-carlo estimation
+        :param path: output directory, uses cwd if None
+        """
         x_circle = np.linspace(0, 1, 200)
         fig, ax = plt.subplots(1, 1, figsize=(5, 5), dpi=300)
         ax.scatter(*zip(*self.points_outside[:10000]), color='r', alpha=0.5,
@@ -67,13 +104,13 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, 'ho:i:r:',['output_dir=', '--iterations', '--random_seed'])
     except getopt.GetoptError:
-        print('monte_carlo_pi.py - o <output_folder>')
+        print('monte_carlo_pi.py - o <output_folder> -i <iterations> -r <random_seed>')
         sys.exit(2)
 
 
     for opt, arg in opts:
         if opt == '-h':
-            print('monte_carlo_pi.py - o <output_folder>')
+            print('monte_carlo_pi.py - o <output_folder> -i <iterations> -r <random_seed>')
 
         if opt in ('-o', '--output_dir'):
             output_folder = Path(arg)
@@ -85,13 +122,13 @@ def main(argv):
             random_seed = int(arg)
 
 
-    print(f'Starting Simulation: Iteations={iterations}, Random Seed={random_seed}')
+    print(f'Starting Simulation: iteations={iterations}, random_seed={random_seed}')
     tic = time.time()
     simulation = MonteCarloPi(iterations=iterations, random_seed=random_seed, output_dir = output_folder)
     pi_hat = simulation.estimate_pi()
-    print(f'Simulation finished: pi_hat = {pi_hat:.10f}')
+    print(f'Result: pi_hat = {pi_hat:.10f}')
     toc = time.time()
-    print('Generation plot')
+    print('Generating plot...')
     simulation.plot()
     print(f'Simulation finished! ({toc-tic:.5} ms) ')
 

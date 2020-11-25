@@ -1,1 +1,0 @@
-# Simulation Monte Carlo Pi

@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+"""This script generates random colored pixel graphics.
+
+A detailed blog post on this script can be found under
+https://www.freecodecamp.org/news/how-to-create-generative-art-in-less-than-100-lines-of-code-d37f379859f/
+"""
+
 import getopt
 import random
 import sys
@@ -5,6 +12,13 @@ import time
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+
+__author__ = "Michael Wittmann and Eric Davidson"
+
+__version__ = "1.0.0"
+__maintainer__ = "Michael Wittmann"
+__email__ = "michael.wittmann@tum.de"
+__status__ = "Example"
 
 
 def r():

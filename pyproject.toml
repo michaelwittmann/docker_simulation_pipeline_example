@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "docker_sim"
+version = "1.0.0"
+description = "Light-weight framework to scale up simulations tasks with docker containers"
+authors = ["Michael Witttmann <michael.wittmann@tum.de>, Maximilan Speicher <maximilian.speicher@tum.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+docker = "^4.4.0"
+loguru = "^0.5.3"
+halo = "^0.0.31"
+python-dateutil = "^2.8.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

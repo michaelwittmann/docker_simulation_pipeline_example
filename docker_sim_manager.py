@@ -1,4 +1,12 @@
-import abc
+#!/usr/bin/env python
+"""Provides a light-weight framework to scale up simulations tasks with docker containers
+
+Disclaimer: This code is part of an example project. In order to reduce complexity,
+I decided to use a simple method and class design. There is still a massive potential in
+error handling and generalization of methods and classes. Feel free to use this code as a
+starting point.
+"""
+
 import datetime
 import shutil
 import threading
@@ -15,31 +23,49 @@ from halo import Halo
 from loguru import logger
 from getpass import getpass
 
+__author__ = "Michael Wittmann and Maximilian Speicher"
+__copyright__ = "Copyright 2020, Michael Wittmann and Maximilian Speicher"
+
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Michael Wittmann"
+__email__ = "michael.wittmann@tum.de"
+__status__ = "Example"
+
+
 class SimJob():
     def __init__(self, sim_Name, templates:Path, command=None) -> None:
+        """
+        Creates a distinct job
+        :param sim_Name: Simulation name (must be unique)
+        :param templates: files to be copied from your host to the container
+        :param command: command to be appended at containers entry point
+        """
         self.templates = templates
         self.sim_Name = sim_Name
         self.command = command
 
-class DockerSimManager(abc.ABC):
+class DockerSimManager():
     def __init__(self,
                  docker_container_url:str,
                  max_workers:int,
-    #             number_of_simulations:int,
-                 data_directory:Path, 
-
+                 data_directory:Path,
                  docker_repo_tag= 'latest'
                  ) -> None:
-        
+        """
+
+        :param docker_container_url: Simulation container URL at container registry
+        :param max_workers: number of parallel workers
+        :param data_directory: path to the output directory on your host
+        :param docker_repo_tag: container tag, Default: latest
+        """
         self._data_directory = data_directory
-    #    self._number_of_simulations = number_of_simulations
         self._max_workers = max_workers
         self._thread_pool_executor = concurrent.futures.ThreadPoolExecutor(max_workers=self._max_workers)
         self._container_prefix = 'DockerSim'
         self._docker_client = docker.from_env()
         self._authenticate_at_container_registry()
         with Halo(text='Pulling latest docker_sim image', spinner='dots'):
-            #TODO: change image
             self._docker_image = self._docker_client.images.pull(
                 repository=docker_container_url,
                 tag=docker_repo_tag
@@ -49,22 +75,22 @@ class DockerSimManager(abc.ABC):
         self._minimum_runtime = 300
         self._maximum_inactivity_time = 30 * 60
         self.job_list = []
-        
-        
-    # @abc.abstractmethod
-    # def _init_simulation(self, sim_name:str):
-    #     pass
-    #
-    # @abc.abstractmethod
-    # def _run_simulation(self, sim_name: str):
-    #     pass
-    
-    def add_sim_job(self, job:SimJob):
+
+
+    def add_sim_job(self, job:SimJob)->None:
+        """
+        Adds a simulation job into the queue
+        :param job: simulation job to be added
+        """
         self.job_list.append(job)
 
 
 
     def start_computation(self):
+        """
+        Starts computation of all jobs inside the queue.
+        Jobs must be added before calling this function
+        """
         self.start_monitoring_thread()
         with self._thread_pool_executor as executor:
             futures = {executor.submit(self._process_sim_job, sim_job): sim_job
@@ -73,11 +99,19 @@ class DockerSimManager(abc.ABC):
                 logger.info(f'Thread for run {futures[future]} did finish')
 
 
-    def _process_sim_job(self, sim_job: SimJob):
+    def _process_sim_job(self, sim_job: SimJob)->None:
+        """
+        Triggers processing steps for a single job.
+        1. _init_simulation
+        2. _run_docker_container
+        3. _cleanup_sim_objects
+        :param sim_job: SimJob to be processed
+        :return: True if processing succeeded, False otherwise.
+        """
         sim_paths = self._init_simulation(sim_job=sim_job)
         if sim_paths is None:
             logger.error(f'Error during initialization for simulation {sim_job.sim_Name}')
-            return
+            return False
 
         try:
             (
@@ -89,20 +123,28 @@ class DockerSimManager(abc.ABC):
                 working_dir=sim_paths
             except:
                 logger.error(f'Error during initialization for simulation {sim_job.sim_Name}')
-                return
+                return False
 
         self._run_docker_container(container_name=sim_job.sim_Name, working_dir=working_dir, command=sim_job.command)
         self.cleanup_sim_objects(sim_job=sim_job, file_objects=file_objects)
-
+        return True
 
     def _init_simulation(self, sim_job):
+        """
+        Initialize simulation. May be overridden with custom function.
+        - Create output folders
+        - Copy file templates
+        - ...
+        :param sim_job: SimJob to be processed
+        :return: Path to working directory on your host's filesystem for this SimJob
+        """
         # prepare your data for your scenario here
         output_folder_name = f'job_{sim_job.sim_Name}'
         working_dir = self._data_directory.joinpath(output_folder_name)
         try:
             with self._io_lock:
                 working_dir.mkdir(exist_ok=False, parents=True)
-                # if you need additional files in your simulation_monte_carlo_pi e.g. config files, data, add them here simulation_monte_carlo_pi here
+                # if you need additional files in your simulation e.g. config files, data, add them here example_monte_carlo_pi here
             return working_dir
         except Exception as e:
             logger.warning(e)
@@ -111,6 +153,12 @@ class DockerSimManager(abc.ABC):
 
 
     def _run_docker_container(self, container_name, working_dir, command):
+        """
+        Triggers the simulation run in a separate Docker container.
+        :param container_name: the container's name
+        :param working_dir: working directory on your host's file system
+        :param command: container command (eg. name of script, cli arguments ...) Must match to your docker entry point.
+        """
         try:
             system_platform = platform.system()
             if system_platform == "Windows":
@@ -164,20 +212,11 @@ class DockerSimManager(abc.ABC):
             except NotFound:
                 logger.warning(f'Can not save logs for {container_name}, because container does not exist')
 
-    # def _run_simulation(self, sim_run: int):
-    #     simulation_path = self._init_simulation(sim_run=sim_run)
-    #     if simulation_path is None:
-    #         logger.error(f'Error during initialization of simulation_monte_carlo_pi {sim_run}')
-    #         return
-    #     else:
-    #         logger.debug(f'Starting container for simulation_monte_carlo_pi run {sim_run}')
-    #         container_name = f'{self._container_prefix}_{sim_run}'
-    #         command = 'INSERT YOUR COMMAND HERE'
-    #         self._run_docker_container(container_name=container_name, working_dir=simulation_path, command=command)
-
-
 
     def start_monitoring_thread(self):
+        """
+        Start a monitoring thread, which observes running docker containers.
+        """
         monitoring_thread = threading.Thread(target=self._monitor_containers,
                                              args=(self._container_prefix,),
                                              daemon=True,
@@ -185,12 +224,23 @@ class DockerSimManager(abc.ABC):
         monitoring_thread.start()
 
     def write_container_logs_and_remove_it(self, container_name, working_dir):
+        """
+        Write container logs and remove the container from your docker server
+        :param container_name: The container's name, which shall be removed
+        :param working_dir: path, where logfiles shall be written to
+        """
         container = self._docker_client.containers.get(container_name)
         with open(working_dir.joinpath('log.txt'), 'w') as f:
             f.write(container.logs().decode('utf-8'))
         container.remove()
 
     def _authenticate_at_container_registry(self):
+        """
+        Authenticate at container registry. NOTE: GitHub container registry is used in this example.
+        If you want to user other container registries, like DockerHub or GitLab, feel free to adapt this method.
+        Function either uses Environment variables for authentication or asks for login credentials in the command line.
+        Note: GitHub container registry does not accept your personal password. You need to generate a personal access token (PAT)
+        """
         username = os.environ.get('GITHUB_USERNAME')
         password = os.environ.get('GITHUB_PAT')
         if username is None:
@@ -209,6 +259,10 @@ class DockerSimManager(abc.ABC):
             logger.info("Successfully authenticated at GitHub container registry.")
 
     def _monitor_containers(self, container_prefix):
+        """
+        Monitors all running docker containers. Inactive containers get killed after self._maximum_inactivity_time
+        :param container_prefix: The containers prefix used for all containers in this simulation
+        """
         while True:
             containers = self._docker_client.containers.list()
             for container in containers:
@@ -234,6 +288,11 @@ class DockerSimManager(abc.ABC):
 
     @staticmethod
     def cleanup_sim_objects(sim_job:SimJob, file_objects):
+        """
+        Clean up function for finished simulations. Removes all files given in file objects.
+        :param sim_job: SimJob to be processed
+        :param file_objects: files/directories to be removed after simulation
+        """
         file_object:Path
         for file_object in file_objects:
             if file_object.is_file():
@@ -249,4 +308,4 @@ class DockerSimManager(abc.ABC):
                     logger.warning(e)
                     logger.warning(f'Error during cleanup for simulation {sim_job.sim_Name}')
             else:
-                logger.warning(f"{file_object=} is not a file or directory.")
+                logger.warning(f"{file_object} is not a file or directory.")
