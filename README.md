@@ -24,7 +24,7 @@ compared to the time it takes to startup the docker container?"
 
 ## What you need
 - Docker installed on your target machine (https://docs.docker.com/get-docker/)
-- Python 3.7 (or newer) installed your target machine
+- Python 3.7 (or newer) installed your target machine (https://www.python.org/downloads/)
 - A GitHub user account (Needed to download docker containers, from GitHubs container registry)
 - Git installed on your target machine (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - (An IDE/Text Editor (VSCode, PyCharm, SublimeText)) - if you want to play around
