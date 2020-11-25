@@ -7,9 +7,6 @@ on:
   push:
     paths:
       - 'simulation_monte_carlo/**'
-  merge:
-      paths:
-        - 'simulation_monte_carlo/**'
 
 jobs:
   test:

@@ -105,16 +105,13 @@ Let' have a look at `.github/publish-monte-carlo-pi-docker`
 
 
 #### Configure action events
-We define this script to run on every file change in `simulation_monte_carlo/**` after any push or merge event.
+We define this script to run on every file change in `simulation_monte_carlo/**` after any push event.
 
 ```yaml
 on:
   push:
     paths:
       - 'simulation_monte_carlo/**'
-  merge:
-      paths:
-        - 'simulation_monte_carlo/**'
 ```
 
 #### Specify jobs
