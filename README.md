@@ -36,7 +36,7 @@ Our pipeline consists of three main parts:
 2. A GitHubActions pipeline, which test, builds and deploys your containerized simulation.
 3. A Python script that orchestrates your simulation tasks in docker (`docker_sim_manager.py`)
 
-<img src="img/overview.jpg" width="600" >
+<img src="img/concept.jpg" width="600" >
 
 ## Simulations
 It doesn't matter what kind of simulation you are running. If it runs on your PC, you will be able to pack it into a docker image.
