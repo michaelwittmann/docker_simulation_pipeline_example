@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: [3.9]
@@ -42,7 +42,7 @@ jobs:
       
   build_docker_and_push_to_registry:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -53,6 +53,6 @@ jobs:
           password: ${{ secrets.CR_PAT }}
           dockerfile: example_monte_carlo_pi/Dockerfile
           registry: docker.pkg.github.com
-          repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
+          repository: maxispeicher/docker_simulation_pipeline_example/monte-carlo-pi-image
           tags: latest
           tag_with_ref: true
