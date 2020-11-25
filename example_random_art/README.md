@@ -28,9 +28,7 @@ This script provides a command line interface to specify the parameters of your 
 python sprithering.py -o <output_folder> -g <grid_size> -i <invaders> -s <img_size> -n <samples>  
 ```
 
-<img src="img/5x5-10-5000.jpg" width="300" height="300">
-<img src="img/15x15-5-5000.jpg" width="300" height="300">
-<img src="img/15x15-30-5000.jpg" width="300" height="300">
+<img src="img/5x5-10-5000.jpg" width="300" height="300"> <img src="img/15x15-5-5000.jpg" width="300" height="300"> <img src="img/15x15-30-5000.jpg" width="300" height="300">
 
 ## Docker Container
 The example is packed into a simple python docker container. The container is available in this repositories container registry.
