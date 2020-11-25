@@ -3,7 +3,10 @@
 
 name: Monte Carlo Pi Test and Docker Publish
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'example_monte_carlo_pi/**'
 
 jobs:
   test:
@@ -35,7 +38,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        PYTHONPATH=. && pytest
+        PYTHONPATH=. pytest
 
   build_docker_and_push_to_registry:
     needs: test
