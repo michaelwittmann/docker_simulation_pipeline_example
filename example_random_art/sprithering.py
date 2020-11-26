@@ -81,6 +81,7 @@ def main(size:int, invaders:int, imgSize:int, output_path:Path, samples:int):
         file_name =  f'{size}x{size}-{invaders}-{imgSize}-{time.time_ns()}.jpg'
         origImage.save(output_path.joinpath(file_name))
 
+
 if __name__ == "__main__":
     output_folder: Path = Path('art')
     size: int = 15

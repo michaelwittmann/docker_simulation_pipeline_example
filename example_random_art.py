@@ -24,7 +24,7 @@ if __name__ == '__main__':
     output_folder = Path.home().joinpath('example_docker_simulation').joinpath('random_art')
 
     # Generate DockerSimManager object. Specify simulation container, number of parallel containers and output_path
-    docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
+    docker_manager = DockerSimManager('ghcr.io/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
                                       10,
                                       output_folder)
 

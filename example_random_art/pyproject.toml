@@ -8,10 +8,10 @@ authors = ["Eric Davidson", "Michael Wittmann <michael.wittmann@tum.de"]
 python = "^3.9"
 Pillow = "^8.0.1"
 image = "^1.5.33"
-flake8 = "^3.8.4"
-pytest = "^6.1.2"
 
 [tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
+pytest = "^6.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
