@@ -248,7 +248,7 @@ class DockerSimManager():
         if password is None:
             password = getpass('Enter password for container registry: ')
         login_result = self._docker_client.login(
-            registry='docker.pkg.github.com',
+            registry='ghcr.io',
             username=username,
             password=password,
             reauth=True

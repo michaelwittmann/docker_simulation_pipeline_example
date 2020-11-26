@@ -38,10 +38,10 @@ https://docs.docker.com/get-docker/
 
 ### Pull Docker container
 ```shell script
-docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest
+docker pull ghcr.io/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest
 ```
 
 ### Run Docker container
 ```shell script
-docker run --name RandomArt -it --mount type=bind,src=C:\Users\gu92jih\docker_sim,dst=/mnt/output/ docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest -o /mnt/output -g 15 -i 30 -s 5000 -n 2
+docker run --name RandomArt -it --mount type=bind,src=C:\Users\gu92jih\docker_sim,dst=/mnt/output/ ghcr.io/michaelwittmann/docker_simulation_pipeline_example/random-art-image:latest -o /mnt/output -g 15 -i 30 -s 5000 -n 2
 ```

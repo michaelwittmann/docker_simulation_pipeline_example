@@ -24,7 +24,7 @@ if __name__ == '__main__':
     output_path = Path.home().joinpath('example_docker_simulation').joinpath('monte_carlo_pi')
 
     # Generate DockerSimManager object. Specify simulation container, number of parallel containers and output_path
-    docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image',
+    docker_manager = DockerSimManager('ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image',
                                       1,
                                       output_path)
 

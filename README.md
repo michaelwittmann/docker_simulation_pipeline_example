@@ -6,8 +6,8 @@ This is an example project to demonstrate how one can easily scale simulation ru
 ### Docker
 Docker is a great tool, which lets you orchestrate your software stack with scalable containers.
 It is mainly used to deploy applications on a distributed cloud infrastructure.
-An application once packed into da docker container is portable to every host running docker.
-There are some issues when you move across architecture (e.g. x86 to ARM), but most of you will still work on x86 architectures
+An application once packed into a docker image is portable to every host running docker.
+There are some issues when you move across architecture (e.g. x86 to ARM), but most of you will still work on x86 architectures.
 For more information on docker please look out for some great tutorials at [docker.com](www.docker.com), [medium.com](www.medium.com) or [youtube.com](www.youtube.com) ...
 
 ### Docker for simulation tasks
@@ -25,7 +25,7 @@ compared to the time it takes to startup the docker container?"
 ## What you need
 - Docker installed on your target machine (https://docs.docker.com/get-docker/)
 - Python 3.7 (or newer) installed your target machine (https://www.python.org/downloads/)
-- A GitHub user account (Needed to download docker containers, from GitHubs container registry)
+- A GitHub user account (Needed to download docker images, from GitHubs container image registry)
 - Git installed on your target machine (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - (An IDE/Text Editor (VSCode, PyCharm, SublimeText)) - if you want to play around
 
@@ -45,10 +45,10 @@ offers the possibility to parametrize it either via config-files or a cli.
 
 For this tutorial I prepared two simple example simulations in Python: `example_monte_carlo_pi`, `example_random_art`
 
-## Deploy your simulation in a docker container
+## Deploy your simulation in a docker image
 
 ### Create a Dockerfile
-The blueprint of every docker container is a Dockerfile. It tells Docker how to build your container,
+The blueprint of every docker image is a Dockerfile. It tells Docker how to build your image,
 which software gets installed, which environment variables are set and which program should be ran at start.
 
 Let's have a look at `example_random_art/Dockerfile`:
@@ -66,7 +66,7 @@ ENV TZ=Europe/Berlin
 ```docker
 WORKDIR /usr/src/app`
 ```
-- During build all files from the directory the Dockerfile lies in, get copied to the containers working directory (in this case `usr/src/app`
+- During build all files from the directory the Dockerfile lies in, get copied to the images working directory (in this case `usr/src/app`
 ```docker
 COPY ./* ./
 ```
@@ -79,27 +79,27 @@ RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 ```
 
-- The containers entrypoint is defined as
+- The images entrypoint is defined as
 ```docker
 ENTRYPOINT ["python", "./sprithering.py"]
 ```
 
-Out of this blueprint you are able to build a docker container locally on your machine running:
+Out of this blueprint you are able to build a docker image locally on your machine running:
 
 ```shell script
 docker build -t myimage:1.0
 ```
 
 That's okay if you work on the same machine, where run your simulations, but gets annoying when you switch between different machines.  
-Moreover, you would need to run `docker build` everytime you made changes on your source code. (Remember the simulation is packed into the container during its build. If you want apply changes you have to build a new version of your container)
+Moreover, you would need to run `docker build` everytime you made changes on your source code. (Remember the simulation is packed into the container during its build. If you want apply changes you have to build a new version of your image)
 
 ### Test, Build and Deploy your Simulation with GitHub Actions
-Modern CI/CD pipelines let you automate those tasks and fill in seemingly into your workflow. (Like the `DockerFile` you just have to set it up once)
+Modern CI/CD pipelines let you automate those tasks and fill in seemingly into your workflow. (Like the `Dockerfile` you just have to set it up once)
 In this tutorial I will show you how to run such a pipeline with GitHub Actions (https://github.com/features/actions).  
-The concept works also on other Platforms e.g. GitLab (https://docs.gitlab.com/ee/ci/). You will need to adapt the CI/CD pipeline on your requirements.
+The concept works also on other Platforms e.g. GitLab (https://docs.gitlab.com/ee/ci/). You will need to adapt the CI/CD pipeline to your requirements.
 
-If you haven't heard about CI/CD at all so far, I would recommend you to look for some tutorials out there. Especially  a proper CI/CD pipeline
-with unit-test can help you a lot find bugs in your code.
+If you haven't heard about CI/CD at all so far, I would recommend you to look for some tutorials out there. Especially a proper CI/CD pipeline
+with unit-tests can help you a lot with finding bugs in your code.
 
 #### GitHubActions
 GitHub Action jobs are collected in the directory `.github/` of your repository. GitHub will auto-check for those files on repository events.
@@ -155,32 +155,40 @@ jobs:
 ```
 
 2. `build_docker_and_push_to_registry` A Docker build and deploy task. This job runs only if the first one succeeds.
-This job, checks out the current version of the repository, and runs docker build and push with the given parameters.
+This job checks out the current version of the repository, and runs docker build and push with the given parameters.
    - `username`: Docker Registry Username. In this case: GitHub environment variable for the user triggering the action script
    - `password`: Docker Registry Password. In this case: Your Personal Access Token (PAT) with sufficient rights on your repository <ADD LINKS>
    - `dockerfile`: Path to your dockerfile inside the repository
-   - `registry`: URL of your desired docker registry. In this case: GitHub Container Registry
+   - `registry`: URL of your desired docker registry. In this case: GitHub Container Image Registry
    - `repository`: In this case: <YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY>/<DOCKER_IMAGE_NAME>
-   - `tags`: Container tag. In this case: `latest`
+   - `tags`: Image tag. In this case: `latest`
 
 For more infos have a look at (https://github.com/docker/build-push-action)
 ```yaml
- build_docker_and_push_to_registry:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
-          dockerfile: example_monte_carlo_pi/Dockerfile
-          registry: docker.pkg.github.com
-          repository: michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image
-          tags: latest
-          tag_with_ref: true
+build_docker_and_push_to_registry:
+  needs: test
+  runs-on: ubuntu-20.04
+  steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+    - name: Build and push docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: ./example_monte_carlo_pi/
+        file: example_monte_carlo_pi/Dockerfile
+        platforms: linux/amd64,linux/arm64,linux/386
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ```
 
 You can watch the results of your pipeline under `https://github.com/YOUR_NAMESPACE/YOUR_REPO/actions`:
@@ -189,7 +197,7 @@ You can watch the results of your pipeline under `https://github.com/YOUR_NAMESP
 <img src="img/workflows-overview.png" width="600">
 <img src="img/workflow_details.png" width="600">
 
-The containers should now also be visible on your repositories main page:
+The images should now also be visible on your GitHub account (`https://github.com/<username>?tab=packages`):
 
 <img src="img/packages.png">
 
@@ -197,26 +205,26 @@ The containers should now also be visible on your repositories main page:
 
 
 ### Pull your docker image
-Let's verify that everything works properly, and let's pull the container to our local machine.
+Let's verify that everything works properly, and let's pull the image to our local machine.
 
-1. At the first time you must provide your login credentials for your container registry
+1. At the first time you must provide your login credentials for your container image registry
 ```shell script
-docker login docker.pkg.github.com
+docker login ghcr.io
 ```
 2. Pull the image
 ```shell script
-docker pull docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+docker pull ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ...
 >e44af8ed0266: Pull complete
 >Digest: sha256:77b65a3bb8deb5b4aa436d28a5dc7fc561b4882f2f115c3843b4afe1a7df23d4
->Status: Downloaded newer image for docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
->docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>Status: Downloaded newer image for ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+>ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 
 ```
 
 3. Run the container
 ```shell script
-docker run -it ocker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
+docker run -it ghcr.io/michaelwittmann/docker_simulation_pipeline_example/monte-carlo-pi-image:latest
 ...
 >Starting simulation: iterations=100000, random_seed=1
 >Result: pi_hat = 3.1378400000
@@ -238,12 +246,12 @@ Therefore I wrote a small Python script which helps you to orchestrate your simu
 ### DockerSimManager
 I wont go through the code line for line, but I'll give you a compact overview of the tasks/elements of the script:
 - `DockerSimManager`: Main class, handling your docker containers.
-  - `docker_container_url`: Simulation container URL at container registry
+  - `docker_container_url`: Simulation image URL at container image registry
   - `max_workers`: number of parallel workers
   - `data_directory`: path to the output directory on your host (This path gets mounted in your containers under `/mnt/data/`)
   - `docker_repo_tag`: container tag, Default: latest
 
-- `SimJob`: A object, which represents a distinct simulation job. You can pass paths to template files, give it a Name and specify the initial command appended on the containers entrypoint.
+- `SimJob`: A object, which represents a distinct simulation job. You can pass paths to template files, give it a name and specify the initial command appended on the containers entrypoint.
   - `sim_Name`: Simulation name (must be unique)
   - `templates`: files to be copied from your host to the container
   - `command`: command to be appended at containers entry point
@@ -261,14 +269,14 @@ I wont go through the code line for line, but I'll give you a compact overview o
 You can now run your simulation with 4 simple steps:
 1. Specify an output folder on your host machine e.g.
 ```python
-# Choose output  directory on your host's file system
+# Choose output directory on your host's file system
 output_folder = Path.home().joinpath('example_docker_simulation')
 ```
 
 2. Create a DockerSimManager object.
 ```python
- # Generate DockerSimManager object. Specify simulation container, number of parallel containers and output_path
-docker_manager = DockerSimManager('docker.pkg.github.com/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
+ # Generate DockerSimManager object. Specify simulation image, number of parallel containers and output_path
+docker_manager = DockerSimManager('ghcr.io/michaelwittmann/docker_simulation_pipeline_example/random-art-image',
                                   10,
                                   output_folder)
 ```
@@ -286,7 +294,7 @@ for i in range(1,10):
 4. Start computation
 ```python
 # Start computation
-    docker_manager.start_computation()
+docker_manager.start_computation()
 ```
 
 ### Run the examples
@@ -319,5 +327,5 @@ ls ~/example_docker_simulation
 ```
 
 
-## Acknoledgements
-Thanks to [Maximilian Speicher](https://github.com/maxispeicher)  for the inspiration on this tutorial, and the first implementation of `DockerSimManager`
+## Acknowledgements
+Thanks to [Maximilian Speicher](https://github.com/maxispeicher) for the inspiration on this tutorial, and the first implementation of `DockerSimManager`
