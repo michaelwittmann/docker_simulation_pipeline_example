@@ -186,11 +186,11 @@ class DockerSimManager():
                     image=self._docker_image,
                     command=command,
                     mounts=[Mount(
-                        target='/simulation',
+                        target='/mnt/data',
                         source=str(working_dir.resolve()),
                         type='bind'
                     )],
-                    working_dir='/simulation',
+                    working_dir='/mnt/data',
                     name=container_name,
                     environment={
                         # If you need add your environment variables here
