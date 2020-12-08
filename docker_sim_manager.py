@@ -42,8 +42,12 @@ class SimJob():
         :param command: command to be appended at containers entry point
         """
         self.templates = templates
-        self.sim_Name = sim_Name
+        self.sim_name = sim_Name
         self.command = command
+
+    def __str__(self) -> str:
+        return self.sim_name
+
 
 class DockerSimManager():
     def __init__(self,
@@ -96,7 +100,7 @@ class DockerSimManager():
             futures = {executor.submit(self._process_sim_job, sim_job): sim_job
                        for sim_job in self.job_list}
             for future in concurrent.futures.as_completed(futures):
-                logger.info(f'Thread for run {futures[future]} did finish')
+                logger.info(f'Run {futures[future]} did finish')
 
 
     def _process_sim_job(self, sim_job: SimJob)->None:
@@ -110,7 +114,7 @@ class DockerSimManager():
         """
         sim_paths = self._init_simulation(sim_job=sim_job)
         if sim_paths is None:
-            logger.error(f'Error during initialization for simulation {sim_job.sim_Name}')
+            logger.error(f'Error during initialization for simulation {sim_job}')
             return False
 
         try:
@@ -122,10 +126,10 @@ class DockerSimManager():
             try:
                 working_dir=sim_paths
             except:
-                logger.error(f'Error during initialization for simulation {sim_job.sim_Name}')
+                logger.error(f'Error during initialization for simulation {str(sim_job)}')
                 return False
 
-        self._run_docker_container(container_name=sim_job.sim_Name, working_dir=working_dir, command=sim_job.command)
+        self._run_docker_container(container_name=sim_job.sim_name, working_dir=working_dir, command=sim_job.command)
         self.cleanup_sim_objects(sim_job=sim_job, file_objects=file_objects)
         return True
 
@@ -139,7 +143,7 @@ class DockerSimManager():
         :return: Path to working directory on your host's filesystem for this SimJob
         """
         # prepare your data for your scenario here
-        output_folder_name = f'job_{sim_job.sim_Name}'
+        output_folder_name = f'job_{sim_job.sim_name}'
         working_dir = self._data_directory.joinpath(output_folder_name)
         try:
             with self._io_lock:
@@ -202,7 +206,7 @@ class DockerSimManager():
                     user=user_id
                 )
         except DockerException as e:
-            logger.warning(f'Could not run {container_name}: {e}.')
+            logger.warning('Error in run {container_name}: {e}.')
         finally:
             try:
                 self.write_container_logs_and_remove_it(
@@ -300,12 +304,12 @@ class DockerSimManager():
                     file_object.unlink()
                 except Exception as e:
                     logger.warning(e)
-                    logger.warning(f'Error during cleanup for simulation {sim_job.sim_Name}')
+                    logger.warning(f'Error during cleanup for simulation {sim_job.sim_name}')
             elif file_object.is_dir():
                 try:
                     shutil.rmtree(file_object)
                 except Exception as e:
                     logger.warning(e)
-                    logger.warning(f'Error during cleanup for simulation {sim_job.sim_Name}')
+                    logger.warning(f'Error during cleanup for simulation {sim_job.sim_name}')
             else:
                 logger.warning(f"{file_object} is not a file or directory.")
