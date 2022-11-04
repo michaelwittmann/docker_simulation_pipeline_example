@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'example_monte_carlo_pi/**'
+  workflow_dispatch:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/docker_simulation_pipeline_example/monte-carlo-pi-image
