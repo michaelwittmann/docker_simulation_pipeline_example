@@ -6,7 +6,7 @@ authors = ["Eric Davidson", "Michael Wittmann <michael.wittmann@tum.de"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Pillow = "^9.0.1"
+Pillow = "^9.3.0"
 image = "^1.5.33"
 
 [tool.poetry.dev-dependencies]
